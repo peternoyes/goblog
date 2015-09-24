@@ -1,7 +1,11 @@
-<html>
+{{define "post"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "header"}}
 <body>
 <h1>Test</h1>
 <a href="/posts/{{.UrlFragment}}"><h2>{{.Title}} ({{.Date}})</h2></a>
 <p>{{.Body}}</p>
 </body>
 </html>
+{{end}}

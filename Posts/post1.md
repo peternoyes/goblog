@@ -1,6 +1,6 @@
 ---
 title:First post!
-date:24th September 2015
+date:2015-Sep-24
 summary:The first post
 ---
 Body!
