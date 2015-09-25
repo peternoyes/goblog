@@ -3,17 +3,17 @@
 // goblog project main.go
 package main
 
-// TODO:
-// Paging in index page
+// TODO: Minimal Supported Set
 // Sort posts by date
-// Tags
-// Database backend ?
-// Cache HTML, have abstract caching mechanism, file system default
-// API to update single post
+// Remove Posts/Config from Repo
+// Environment Variable to find posts (File System / S3)
 // Images
-// Style html
-// Theme separate from html?
-// File system watcher?
+// Footer with copyright notice and link to github
+
+// TODO: Long Term
+// Paging in index page
+// Database backend
+// Render to static content
 // REST call for posting / updating markdown?
 
 import (
