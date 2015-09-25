@@ -9,6 +9,7 @@ package main
 // Environment Variable to find posts (File System / S3)
 // Images
 // Footer with copyright notice and link to github
+// 404 Page
 
 // TODO: Long Term
 // Paging in index page
@@ -27,6 +28,8 @@ import (
 var config Config
 
 func main() {
+
+	//TestS3()
 
 	posts = LoadPosts()
 
