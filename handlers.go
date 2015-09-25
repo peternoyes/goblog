@@ -50,3 +50,23 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func Tags(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	tag := vars["tag"]
+
+	tagPosts := GetPosts(tag)
+
+	content := struct {
+		Config Config
+		Posts  *[]Post
+	}{
+		config,
+		&tagPosts,
+	}
+
+	err := templates.ExecuteTemplate(w, "tag", content)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}

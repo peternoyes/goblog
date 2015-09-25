@@ -4,8 +4,9 @@
 			<p class="description">{{.Config.Description}}</p>
 			<ul>
 				<li><a href="/">Home</a></li>
-				<li>Tag1</li>
-				<li>Tag2</li>
+				{{range .Config.TopLevelTags}}
+				<li><a href="/tags/{{.}}">{{.}}</a></li>				
+				{{end}}
 			</ul>
 		</aside>
 {{end}}

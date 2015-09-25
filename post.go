@@ -24,13 +24,24 @@ type Post struct {
 	Title       string
 	Date        time.Time
 	Summary     string
+	Tags        []string
 	Body        template.HTML
+}
+
+func (p Post) HasTag(tag string) bool {
+	for _, t := range p.Tags {
+		if t == tag {
+			return true
+		}
+	}
+
+	return false
 }
 
 func LoadPosts() []Post {
 	fmt.Println("getPosts()")
 	p := []Post{}
-	files, _ := filepath.Glob("posts/*")
+	files, _ := filepath.Glob("posts/*.md")
 	for _, f := range files {
 		fileStream, err := os.Open(f)
 		if err != nil {
@@ -58,6 +69,18 @@ func GetPost(fragment string) *Post {
 	return nil
 }
 
+func GetPosts(tag string) []Post {
+	p := make([]Post, 0)
+
+	for _, post := range posts {
+		if post.HasTag(tag) {
+			p = append(p, post)
+		}
+	}
+
+	return p
+}
+
 func loadPost(reader io.Reader) Post {
 	fmt.Println("Load Post")
 	scanner := bufio.NewScanner(reader)
@@ -71,6 +94,7 @@ func loadPost(reader io.Reader) Post {
 	var title, summary string
 	var date time.Time
 	var buffer bytes.Buffer
+	var tags []string
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -92,6 +116,11 @@ func loadPost(reader io.Reader) Post {
 					date, _ = time.Parse("2006-Jan-02", tokens[1])
 				case "summary":
 					summary = tokens[1]
+				case "tags":
+					tags = strings.Split(tokens[1], ",")
+					for i, tag := range tags {
+						tags[i] = strings.TrimSpace(tag)
+					}
 				}
 			}
 		} else {
@@ -105,5 +134,5 @@ func loadPost(reader io.Reader) Post {
 	fragment := u.EscapedPath()
 
 	markedBody := string(blackfriday.MarkdownCommon(body))
-	return Post{fragment, title, date, summary, template.HTML(markedBody)}
+	return Post{fragment, title, date, summary, tags, template.HTML(markedBody)}
 }

@@ -38,4 +38,10 @@ var routes = Routes{
 		"/posts/{postFragment}",
 		Posts,
 	},
+	Route{
+		"Tags",
+		"GET",
+		"/tags/{tag}",
+		Tags,
+	},
 }

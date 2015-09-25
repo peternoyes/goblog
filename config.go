@@ -2,6 +2,7 @@
 package main
 
 type Config struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title        string   `json:"title"`
+	Description  string   `json:"description"`
+	TopLevelTags []string `json:"topLevelTags"`
 }
