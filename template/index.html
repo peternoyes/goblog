@@ -1,13 +1,18 @@
 {{define "index"}}
 <!DOCTYPE html>
 <html lang="en">
-{{template "header"}}
-<body>
-<h1>Test</h1>
-{{range .}}
-<a href="/posts/{{.UrlFragment}}"><h2>{{.Title}} ({{.Date}})</h2></a>
-<p>{{.Summary}}</p>
-{{end}}
-</body>
+	{{template "header" .}}
+	<body>
+		{{template "aside" .}}
+		<section id="content">			
+			{{range .Posts}}
+			<div class = "post">
+				<h2><a href="/posts/{{.UrlFragment}}">{{.Title}}</a></h2>
+				<div class = "date">{{.Date}}</div>
+				<p>{{.Summary}}</p>
+			</div>
+			{{end}}
+		</section>
+	</body>
 </html>
 {{end}}
