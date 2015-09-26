@@ -20,20 +20,40 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 var config Config
+var driver Driver
 
 func main() {
+	key := os.Getenv("GOBLOG_DRIVER")
+	path := os.Getenv("GOBLOG_DATA")
+	region := os.Getenv("GOBLOG_REGION")
 
-	//TestS3()
+	if key == "" || path == "" {
+		key = "file"
+		path = "posts/"
+	}
 
-	posts = LoadPosts()
+	fmt.Println("Driver: ", key)
+	fmt.Println("Path: ", path)
+	fmt.Println("Region: ", region)
 
-	data, err := ioutil.ReadFile("posts/config.json")
+	switch key {
+		case "aws":
+			driver = &DriverS3{path, region, nil}
+		default:
+			driver = &DriverFile{path}
+	}
+
+	driver.New()
+
+	driver.(*DriverS3).TestS3()
+
+	data, err := driver.GetConfig()
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -46,6 +66,8 @@ func main() {
 	}
 
 	fmt.Println("Title: ", config.Title)
+
+	posts = LoadPosts()
 
 	fmt.Println("Main")
 	router := NewRouter()

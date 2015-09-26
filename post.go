@@ -11,8 +11,6 @@ import (
 	"io"
 	"log"
 	"net/url"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -41,9 +39,9 @@ func (p Post) HasTag(tag string) bool {
 func LoadPosts() []Post {
 	fmt.Println("getPosts()")
 	p := []Post{}
-	files, _ := filepath.Glob("posts/*.md")
+	files, _ := driver.GlobMarkdown()
 	for _, f := range files {
-		fileStream, err := os.Open(f)
+		fileStream, err := driver.Open(f)
 		if err != nil {
 			log.Fatal(err)
 		}
