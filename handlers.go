@@ -12,12 +12,20 @@ var templates = template.Must(template.ParseGlob("template/*"))
 func Index(w http.ResponseWriter, r *http.Request) {
 	// BUG: Handle .favicon
 
+	temp := make ([]*Post, 0)
+	for _, p := range posts {
+		fmt.Println("TempPost: ", p.Post)
+		temp = append(temp, p.Post)
+	} 
+
+	fmt.Println(len(temp))
+
 	content := struct {
 		Config Config
-		Posts  *[]Post
+		Posts  []*Post
 	}{
 		config,
-		&posts,
+		temp,
 	}
 
 	err := templates.ExecuteTemplate(w, "index", content)
@@ -59,10 +67,10 @@ func Tags(w http.ResponseWriter, r *http.Request) {
 
 	content := struct {
 		Config Config
-		Posts  *[]Post
+		Posts  []*Post
 	}{
 		config,
-		&tagPosts,
+		tagPosts,
 	}
 
 	err := templates.ExecuteTemplate(w, "tag", content)

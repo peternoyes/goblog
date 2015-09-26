@@ -6,11 +6,11 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/defaults"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"log"
 	"strings"
 	"io"
 	"io/ioutil"
 	"fmt"
+	"time"
 )
 
 type DriverS3 struct {
@@ -44,7 +44,7 @@ func (d *DriverS3) GetConfig() ([]byte, error) {
 	return ioutil.ReadAll(result.Body)
 }
 
-func (d *DriverS3) GlobMarkdown() ([]string, error) {
+func (d *DriverS3) GlobMarkdown() ([]*PostStub, error) {
 	input := s3.ListObjectsInput{}
 	input.Bucket = &d.Bucket
 
@@ -53,15 +53,25 @@ func (d *DriverS3) GlobMarkdown() ([]string, error) {
 		return nil, err
 	}
 
-	markdown := make([]string, 0)
+	ret := make([]*PostStub, 0)
 
 	for _, object := range result.Contents {
-		if strings.HasSuffix(*object.Key, ".md") {
-			markdown = append(markdown, *object.Key)
+		key := *object.Key
+		fmt.Println("Key: ", key)
+		if strings.HasSuffix(key, ".md") {
+			var title string
+			var date time.Time
+			title, date, err = GetDateAndTitleFromFile(key)
+			if err != nil {
+				return nil, err
+			}
+			mod := *object.LastModified
+
+			ret = append(ret, &PostStub{key, title, date, mod, nil})
 		}
 	}
 
-	return markdown, nil
+	return ret, nil
 }
 
 func (d *DriverS3) Open(file string) (io.ReadCloser, error) {

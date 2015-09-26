@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var posts []Post
+var posts []*PostStub
 
 type Post struct {
 	UrlFragment string
@@ -36,23 +36,22 @@ func (p Post) HasTag(tag string) bool {
 	return false
 }
 
-func LoadPosts() []Post {
-	fmt.Println("getPosts()")
-	p := []Post{}
-	files, _ := driver.GlobMarkdown()
-	for _, f := range files {
-		fileStream, err := driver.Open(f)
+func LoadPosts() {
+	var err error
+	posts, err = driver.GlobMarkdown()
+	if err != nil {
+		log.Fatal(err) 
+	}
+
+	for _, p := range posts {
+		fileStream, err := driver.Open(p.Path)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		defer fileStream.Close()
-
-		post := loadPost(fileStream)
-		p = append(p, post)
-
+		p.Post = loadPost(fileStream)
 	}
-	return p
 }
 
 func GetPost(fragment string) *Post {
@@ -60,26 +59,26 @@ func GetPost(fragment string) *Post {
 	f := u.EscapedPath()
 
 	for _, post := range posts {
-		if post.UrlFragment == f {
-			return &post
+		if post.Post.UrlFragment == f {
+			return post.Post
 		}
 	}
 	return nil
 }
 
-func GetPosts(tag string) []Post {
-	p := make([]Post, 0)
+func GetPosts(tag string) []*Post {
+	p := make([]*Post, 0)
 
 	for _, post := range posts {
-		if post.HasTag(tag) {
-			p = append(p, post)
+		if post.Post.HasTag(tag) {
+			p = append(p, post.Post)
 		}
 	}
 
 	return p
 }
 
-func loadPost(reader io.Reader) Post {
+func loadPost(reader io.Reader) *Post {
 	fmt.Println("Load Post")
 	scanner := bufio.NewScanner(reader)
 	scanner.Scan()
@@ -132,5 +131,5 @@ func loadPost(reader io.Reader) Post {
 	fragment := u.EscapedPath()
 
 	markedBody := string(blackfriday.MarkdownCommon(body))
-	return Post{fragment, title, date, summary, tags, template.HTML(markedBody)}
+	return &Post{fragment, title, date, summary, tags, template.HTML(markedBody)}
 }

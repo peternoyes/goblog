@@ -5,11 +5,10 @@ package main
 
 // TODO: Minimal Supported Set
 // Sort posts by date
-// Remove Posts/Config from Repo
-// Environment Variable to find posts (File System / S3)
 // Images
 // Footer with copyright notice and link to github
 // 404 Page
+// Show date better
 
 // TODO: Long Term
 // Paging in index page
@@ -51,8 +50,6 @@ func main() {
 
 	driver.New()
 
-	driver.(*DriverS3).TestS3()
-
 	data, err := driver.GetConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +64,7 @@ func main() {
 
 	fmt.Println("Title: ", config.Title)
 
-	posts = LoadPosts()
+	LoadPosts()
 
 	fmt.Println("Main")
 	router := NewRouter()
