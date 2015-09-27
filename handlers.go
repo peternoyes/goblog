@@ -14,11 +14,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	temp := make ([]*Post, 0)
 	for _, p := range posts {
-		fmt.Println("TempPost: ", p.Post)
 		temp = append(temp, p.Post)
 	} 
-
-	fmt.Println(len(temp))
 
 	content := struct {
 		Config Config
