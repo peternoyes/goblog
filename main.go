@@ -8,7 +8,8 @@ package main
 // Images
 // Footer with copyright notice and link to github
 // 404 Page
-// Show date better
+// Better date format
+// .favicon
 
 // TODO: Long Term
 // Paging in index page
