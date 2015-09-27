@@ -5,8 +5,8 @@ package main
 import (
 	"io"
 	"io/ioutil"
-	"path/filepath"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -26,7 +26,7 @@ func (d *DriverFile) New() {
 }
 
 func (d *DriverFile) GetConfig() ([]byte, error) {
-	return ioutil.ReadFile(d.Root +  "config.json")
+	return ioutil.ReadFile(d.Root + "config.json")
 }
 
 func (d *DriverFile) GlobMarkdown() ([]*PostStub, error) {

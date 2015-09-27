@@ -40,7 +40,7 @@ func LoadPosts() {
 	var err error
 	posts, err = driver.GlobMarkdown()
 	if err != nil {
-		log.Fatal(err) 
+		log.Fatal(err)
 	}
 
 	for _, p := range posts {

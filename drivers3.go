@@ -3,20 +3,20 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/defaults"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"strings"
 	"io"
 	"io/ioutil"
-	"fmt"
+	"strings"
 	"time"
 )
 
 type DriverS3 struct {
 	Bucket string
 	Region string
-	Svc *s3.S3
+	Svc    *s3.S3
 }
 
 func (d *DriverS3) New() {
@@ -30,7 +30,7 @@ func (d *DriverS3) GetConfig() ([]byte, error) {
 	key := "config.json"
 	input := s3.GetObjectInput{
 		Bucket: aws.String(d.Bucket),
-		Key: aws.String(key),
+		Key:    aws.String(key),
 	}
 
 	result, err := d.Svc.GetObject(&input)
@@ -76,10 +76,10 @@ func (d *DriverS3) GlobMarkdown() ([]*PostStub, error) {
 
 func (d *DriverS3) Open(file string) (io.ReadCloser, error) {
 	fmt.Println("driverS3.Open")
-	
+
 	input := s3.GetObjectInput{
 		Bucket: aws.String(d.Bucket),
-		Key: aws.String(file),
+		Key:    aws.String(file),
 	}
 
 	result, err := d.Svc.GetObject(&input)
@@ -90,4 +90,3 @@ func (d *DriverS3) Open(file string) (io.ReadCloser, error) {
 
 	return result.Body, nil
 }
-

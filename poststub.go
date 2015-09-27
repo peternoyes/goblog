@@ -1,19 +1,18 @@
 package main
 
 import (
-	"time"
-	"strings"
 	"errors"
 	"strconv"
+	"strings"
+	"time"
 )
 
-type PostStub struct
-{
-	Path string
-	Title string
-	Date time.Time
+type PostStub struct {
+	Path         string
+	Title        string
+	Date         time.Time
 	LastModified time.Time
-	Post *Post
+	Post         *Post
 }
 
 func GetDateAndTitleFromFile(file string) (title string, date time.Time, err error) {
@@ -24,7 +23,7 @@ func GetDateAndTitleFromFile(file string) (title string, date time.Time, err err
 	tokens := strings.SplitN(file, "-", 7)
 	if len(tokens) != 7 {
 		err = errors.New("Malformed string")
-		return		
+		return
 	}
 
 	var location *time.Location

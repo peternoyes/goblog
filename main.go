@@ -42,10 +42,10 @@ func main() {
 	fmt.Println("Region: ", region)
 
 	switch key {
-		case "aws":
-			driver = &DriverS3{path, region, nil}
-		default:
-			driver = &DriverFile{path}
+	case "aws":
+		driver = &DriverS3{path, region, nil}
+	default:
+		driver = &DriverFile{path}
 	}
 
 	driver.New()
