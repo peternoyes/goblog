@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +14,11 @@ type PostStub struct {
 	Date         time.Time
 	LastModified time.Time
 	Post         *Post
+}
+
+func GetUrlFragmentFromTitle(title string) string {
+	u, _ := url.Parse(title)
+	return u.EscapedPath()
 }
 
 func GetDateAndTitleFromFile(file string) (title string, date time.Time, err error) {
@@ -54,7 +60,7 @@ func GetDateAndTitleFromFile(file string) (title string, date time.Time, err err
 	}
 
 	date = time.Date(year, month, day, hour, min, sec, 0, location)
-	title = tokens[6]
+	title = strings.TrimSuffix(tokens[6], ".md")
 	err = nil
 	return
 }

@@ -146,6 +146,13 @@ aside{
 	padding-top: 65px;
 }
 
+aside img.avatar {
+    border-radius: 50%;
+    margin-bottom: 40px;
+    width: 159px;
+    height: 150px;
+}
+
 aside p.description{
 	font-size: 13px;
 	line-height: 1.8;

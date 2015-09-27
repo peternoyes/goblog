@@ -47,11 +47,37 @@ func LoadPosts() {
 		fileStream, err := driver.Open(p.Path)
 		if err != nil {
 			log.Fatal(err)
+			continue
 		}
 
 		defer fileStream.Close()
 		p.Post = loadPost(fileStream)
 	}
+}
+
+func SyncPosts() {
+	tempPosts, err := driver.GlobMarkdown()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, p := range tempPosts {
+		fragment := GetUrlFragmentFromTitle(p.Title)
+		post := GetPost(fragment)
+		if post != nil {
+			fmt.Println("Post Updated")
+		} else {
+			fileStream, err := driver.Open(p.Path)
+			if err != nil {
+				log.Fatal(err)
+				continue
+			}
+			defer fileStream.Close()
+			p.Post = loadPost(fileStream)
+			posts = append(posts, p)
+		}
+	}
+
 }
 
 func GetPost(fragment string) *Post {
@@ -127,8 +153,7 @@ func loadPost(reader io.Reader) *Post {
 	}
 
 	body := buffer.Bytes()
-	u, _ := url.Parse(title)
-	fragment := u.EscapedPath()
+	fragment := GetUrlFragmentFromTitle(title)
 
 	markedBody := string(blackfriday.MarkdownCommon(body))
 	return &Post{fragment, title, date, summary, tags, template.HTML(markedBody)}

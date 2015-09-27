@@ -12,6 +12,8 @@ var templates = template.Must(template.ParseGlob("template/*"))
 func Index(w http.ResponseWriter, r *http.Request) {
 	// BUG: Handle .favicon
 
+	SyncPosts()
+
 	temp := make([]*Post, 0)
 	for _, p := range posts {
 		temp = append(temp, p.Post)
@@ -59,6 +61,8 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 func Tags(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tag := vars["tag"]
+
+	SyncPosts()
 
 	tagPosts := GetPosts(tag)
 
