@@ -39,6 +39,12 @@ var routes = Routes{
 		Posts,
 	},
 	Route{
+		"Images",
+		"GET",
+		"/images/{image}",
+		Images,
+	},
+	Route{
 		"Tags",
 		"GET",
 		"/tags/{tag}",

@@ -58,6 +58,13 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Images(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	image := vars["image"]
+
+	fmt.Println("Image: ", image)
+}
+
 func Tags(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tag := vars["tag"]

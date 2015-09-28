@@ -11,6 +11,7 @@ type Config struct {
 	Gravatar     string   `json:"gravatar"`
 	Description  string   `json:"description"`
 	TopLevelTags []string `json:"topLevelTags"`
+	Copyright    string   `json:"copyright"`
 }
 
 func (c Config) GetGravatarURL() string {
