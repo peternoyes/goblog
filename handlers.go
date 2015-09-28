@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 var templates = template.Must(template.ParseGlob("template/*"))
@@ -62,7 +63,15 @@ func Images(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	image := vars["image"]
 
-	fmt.Println("Image: ", image)
+	if data, err := driver.GetImage(image); err == nil {
+		w.Header().Set("Content-Type", "image/jpeg")
+		w.Header().Set("Content-Length", strconv.Itoa(len(data)))
+		if _, err = w.Write(data); err != nil {
+			fmt.Println("Write image failure")
+		}
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
 }
 
 func Tags(w http.ResponseWriter, r *http.Request) {

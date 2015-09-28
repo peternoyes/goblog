@@ -44,6 +44,23 @@ func (d *DriverS3) GetConfig() ([]byte, error) {
 	return ioutil.ReadAll(result.Body)
 }
 
+func (d *DriverS3) GetImage(image string) ([]byte, error) {
+	input := s3.GetObjectInput{
+		Bucket: aws.String(d.Bucket),
+		Key:    aws.String(image),
+	}
+
+	result, err := d.Svc.GetObject(&input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer result.Body.Close()
+
+	return ioutil.ReadAll(result.Body)
+}
+
 func (d *DriverS3) GlobMarkdown() ([]*PostStub, error) {
 	input := s3.ListObjectsInput{}
 	input.Bucket = &d.Bucket

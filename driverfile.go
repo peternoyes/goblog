@@ -15,6 +15,7 @@ type Driver interface {
 	GetConfig() ([]byte, error)
 	GlobMarkdown() ([]*PostStub, error)
 	Open(string) (io.ReadCloser, error)
+	GetImage(image string) ([]byte, error)
 }
 
 type DriverFile struct {
@@ -27,6 +28,10 @@ func (d *DriverFile) New() {
 
 func (d *DriverFile) GetConfig() ([]byte, error) {
 	return ioutil.ReadFile(d.Root + "config.json")
+}
+
+func (d *DriverFile) GetImage(image string) ([]byte, error) {
+	return ioutil.ReadFile(d.Root + image)
 }
 
 func (d *DriverFile) GlobMarkdown() ([]*PostStub, error) {
