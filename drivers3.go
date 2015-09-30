@@ -61,7 +61,7 @@ func (d *DriverS3) GetImage(image string) ([]byte, error) {
 	return ioutil.ReadAll(result.Body)
 }
 
-func (d *DriverS3) GlobMarkdown() ([]*PostStub, error) {
+func (d *DriverS3) GlobMarkdown() (Stubs, error) {
 	input := s3.ListObjectsInput{}
 	input.Bucket = &d.Bucket
 
@@ -70,7 +70,7 @@ func (d *DriverS3) GlobMarkdown() ([]*PostStub, error) {
 		return nil, err
 	}
 
-	ret := make([]*PostStub, 0)
+	ret := make(Stubs, 0)
 
 	for _, object := range result.Contents {
 		key := *object.Key

@@ -13,7 +13,7 @@ import (
 type Driver interface {
 	New()
 	GetConfig() ([]byte, error)
-	GlobMarkdown() ([]*PostStub, error)
+	GlobMarkdown() (Stubs, error)
 	Open(string) (io.ReadCloser, error)
 	GetImage(image string) ([]byte, error)
 }
@@ -34,13 +34,13 @@ func (d *DriverFile) GetImage(image string) ([]byte, error) {
 	return ioutil.ReadFile(d.Root + image)
 }
 
-func (d *DriverFile) GlobMarkdown() ([]*PostStub, error) {
+func (d *DriverFile) GlobMarkdown() (Stubs, error) {
 	files, err := filepath.Glob(d.Root + "*.md")
 	if err != nil {
 		return nil, err
 	}
 
-	ret := make([]*PostStub, 0)
+	ret := make(Stubs, 0)
 
 	for _, file := range files {
 		key := filepath.Base(file)

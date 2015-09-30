@@ -11,11 +11,12 @@ import (
 	"io"
 	"log"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 )
 
-var posts []*PostStub
+var posts Stubs
 
 type Post struct {
 	UrlFragment string
@@ -23,6 +24,7 @@ type Post struct {
 	Date        time.Time
 	Summary     string
 	Tags        []string
+	Excerpt     template.HTML
 	Body        template.HTML
 }
 
@@ -42,6 +44,8 @@ func LoadPosts() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	sort.Sort(sort.Reverse(posts))
 
 	for _, p := range posts {
 		fileStream, err := driver.Open(p.Path)
@@ -63,9 +67,11 @@ func SyncPosts() {
 
 	for _, p := range tempPosts {
 		fragment := GetUrlFragmentFromTitle(p.Title)
-		post := GetPost(fragment)
+		post := GetStub(fragment)
 		if post != nil {
-			fmt.Println("Post Updated")
+			if p.LastModified != post.LastModified {
+				fmt.Println("Post Updated")
+			}
 		} else {
 			fileStream, err := driver.Open(p.Path)
 			if err != nil {
@@ -78,6 +84,19 @@ func SyncPosts() {
 		}
 	}
 
+	sort.Sort(sort.Reverse(posts))
+}
+
+func GetStub(fragment string) *PostStub {
+	u, _ := url.Parse(fragment)
+	f := u.EscapedPath()
+
+	for _, post := range posts {
+		if post.Post.UrlFragment == f {
+			return post
+		}
+	}
+	return nil
 }
 
 func GetPost(fragment string) *Post {
@@ -114,9 +133,10 @@ func loadPost(reader io.Reader) *Post {
 	}
 
 	inYaml := true
+	inExcerpt := true
 	var title, summary string
 	var date time.Time
-	var buffer bytes.Buffer
+	var buffer, excerptBuffer bytes.Buffer
 	var tags []string
 
 	for scanner.Scan() {
@@ -147,14 +167,32 @@ func loadPost(reader io.Reader) *Post {
 				}
 			}
 		} else {
-			buffer.WriteString(line)
-			buffer.WriteString("\n")
+			if config.ExcerptTag != "" && line == config.ExcerptTag {
+				inExcerpt = false
+				buffer.Write(excerptBuffer.Bytes())
+			} else {
+				if inExcerpt {
+					excerptBuffer.WriteString(line)
+					excerptBuffer.WriteString("\n")
+				} else {
+					buffer.WriteString(line)
+					buffer.WriteString("\n")
+				}
+			}
 		}
+	}
+
+	excerpt := []byte(summary) // Default excerpt
+	if inExcerpt {
+		buffer = excerptBuffer
+	} else {
+		excerpt = excerptBuffer.Bytes()
 	}
 
 	body := buffer.Bytes()
 	fragment := GetUrlFragmentFromTitle(title)
 
+	markedExcerpt := string(blackfriday.MarkdownCommon(excerpt))
 	markedBody := string(blackfriday.MarkdownCommon(body))
-	return &Post{fragment, title, date, summary, tags, template.HTML(markedBody)}
+	return &Post{fragment, title, date, summary, tags, template.HTML(markedExcerpt), template.HTML(markedBody)}
 }

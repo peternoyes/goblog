@@ -9,5 +9,10 @@
 				<li><a href="/tags/{{.}}">{{.}}</a></li>				
 				{{end}}
 			</ul>
+			<ul>
+				{{range .Config.Links}}
+				<li><a href="{{.Url}}">{{.Text}}</a></li>
+				{{end}}
+			</ul>
 		</aside>
 {{end}}

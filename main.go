@@ -4,11 +4,7 @@
 package main
 
 // TODO: Minimal Supported Set
-// Sort posts by date
-// Images
-// Footer with copyright notice and link to github
 // 404 Page
-// Better date format
 // .favicon
 
 // TODO: Long Term
@@ -33,10 +29,10 @@ func main() {
 	path := os.Getenv("GOBLOG_DATA")
 	region := os.Getenv("GOBLOG_REGION")
 
-	if key == "" || path == "" {
-		key = "file"
-		path = "posts/"
-	}
+	//if key == "" || path == "" {
+	key = "file"
+	path = "posts/"
+	//}
 
 	fmt.Println("Driver: ", key)
 	fmt.Println("Path: ", path)
@@ -70,5 +66,6 @@ func main() {
 	fmt.Println("Main")
 	router := NewRouter()
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
+	router.NotFoundHandler = http.HandlerFunc(NotFound)
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

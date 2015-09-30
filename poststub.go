@@ -8,12 +8,26 @@ import (
 	"time"
 )
 
+type Stubs []*PostStub
+
 type PostStub struct {
 	Path         string
 	Title        string
 	Date         time.Time
 	LastModified time.Time
 	Post         *Post
+}
+
+func (s Stubs) Len() int {
+	return len(s)
+}
+
+func (s Stubs) Less(i, j int) bool {
+	return s[i].Date.Before(s[j].Date)
+}
+
+func (s Stubs) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
 func GetUrlFragmentFromTitle(title string) string {

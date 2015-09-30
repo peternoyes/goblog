@@ -34,6 +34,19 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func NotFound(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Not Found: ", r.URL)
+	content := struct {
+		Config Config
+	}{
+		config,
+	}
+	err := templates.ExecuteTemplate(w, "404", content)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func Posts(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fragment := vars["postFragment"]
@@ -51,6 +64,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	if post == nil {
 		fmt.Println("Not Found: ", fragment)
 		w.WriteHeader(http.StatusNotFound)
+		NotFound(w, r)
 	} else {
 		err := templates.ExecuteTemplate(w, "post", content)
 		if err != nil {

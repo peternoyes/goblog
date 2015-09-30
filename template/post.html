@@ -7,8 +7,8 @@
 		<section id="content">		
 			<div class = "post">
 				<h2><a href="/posts/{{.Post.UrlFragment}}">{{.Post.Title}}</a></h2>
-				<div class = "date">{{.Post.Date}}</div>
-				<p>{{.Post.Body}}</p>
+				<div class = "date">{{.Post.Date.Format "January 2, 2006"}}</div>
+				{{.Post.Body}}
 			</div>
 			{{template "footer" .}}	
 		</section>

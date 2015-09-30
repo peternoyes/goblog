@@ -8,8 +8,9 @@
 			{{range .Posts}}
 			<div class = "post">
 				<h2><a href="/posts/{{.UrlFragment}}">{{.Title}}</a></h2>
-				<div class = "date">{{.Date}}</div>
-				<p>{{.Body}}</p>
+				<div class = "date">{{.Date.Format "January 2, 2006"}}</div>
+				{{.Excerpt}}
+				<p><a href="/posts/{{.UrlFragment}}">Continue...</a></p>
 			</div>
 			{{end}}
 			{{template "footer" .}}	

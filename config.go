@@ -12,6 +12,13 @@ type Config struct {
 	Description  string   `json:"description"`
 	TopLevelTags []string `json:"topLevelTags"`
 	Copyright    string   `json:"copyright"`
+	ExcerptTag   string   `json:"excerptTag"`
+	Links        []Link   `json:"links"`
+}
+
+type Link struct {
+	Text string `json:"text" `
+	Url  string `json:"url"`
 }
 
 func (c Config) GetGravatarURL() string {

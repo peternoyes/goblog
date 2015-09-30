@@ -1,0 +1,16 @@
+{{define "404"}}
+<!DOCTYPE html>
+<html lang="en">
+	{{template "header" .}}
+	<body>
+		{{template "aside" .}}
+		<section id="content">
+			<div class = "post">  		
+				<h2>Not Found</h2>
+				<p>Click <a href="/">here</a> to go home</p>
+			</div>
+			{{template "footer" .}}		
+		</section>
+	</body>
+</html>
+{{end}}
