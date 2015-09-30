@@ -29,10 +29,10 @@ func main() {
 	path := os.Getenv("GOBLOG_DATA")
 	region := os.Getenv("GOBLOG_REGION")
 
-	//if key == "" || path == "" {
+	if key == "" || path == "" {
 	key = "file"
 	path = "posts/"
-	//}
+	}
 
 	fmt.Println("Driver: ", key)
 	fmt.Println("Path: ", path)
