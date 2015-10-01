@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"io"
 	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 )
@@ -59,6 +60,53 @@ func (d *DriverS3) GetImage(image string) ([]byte, error) {
 	defer result.Body.Close()
 
 	return ioutil.ReadAll(result.Body)
+}
+
+func (d *DriverS3) GetTemplateFolder() (string, error) {
+
+	theme := config.Theme
+
+	input := s3.ListObjectsInput{}
+	input.Bucket = &d.Bucket
+	input.Prefix = aws.String(theme)
+	input.Delimiter = aws.String("/")
+
+	result, err := d.Svc.ListObjects(&input)
+	if err != nil {
+		return "", err
+	}
+
+	os.RemoveAll("temp")
+	os.Mkdir("temp", 0777)
+
+	for _, object := range result.Contents {
+		if *object.Key == theme {
+			continue
+		}
+
+		result, err := d.Svc.GetObject(&s3.GetObjectInput{
+			Bucket: aws.String(d.Bucket),
+			Key:    aws.String(*object.Key),
+		})
+		if err != nil {
+			return "", err
+		}
+
+		file, err := os.Create("temp/" + strings.TrimPrefix(*object.Key, config.Theme))
+		if err != nil {
+			return "", err
+		}
+
+		_, err = io.Copy(file, result.Body)
+		if err != nil {
+			return "", err
+		}
+
+		result.Body.Close()
+		file.Close()
+	}
+
+	return "temp/", nil
 }
 
 func (d *DriverS3) GlobMarkdown() (Stubs, error) {

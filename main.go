@@ -30,8 +30,8 @@ func main() {
 	region := os.Getenv("GOBLOG_REGION")
 
 	if key == "" || path == "" {
-	key = "file"
-	path = "posts/"
+		key = "file"
+		path = "posts/"
 	}
 
 	fmt.Println("Driver: ", key)
@@ -60,6 +60,8 @@ func main() {
 	}
 
 	fmt.Println("Title: ", config.Title)
+
+	InitTemplates()
 
 	LoadPosts()
 

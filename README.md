@@ -1,5 +1,5 @@
 # goblog
-goblog is a very simple blogging platform written in Go and designed to run in the AWS Elastic Beanstalk and store the blog data S3. THe engine uses the blackfriday markdown library, gorilla mux, and the built in Go templating functionality. Development of goblog has been primarily an exercise to learn and experiment with Go and AWS to build my personal blog. [Here](http://peternoyes.elasticbeanstalk.com) is the blog in action.
+goblog is a very simple blogging platform written in Go and designed to run in the AWS Elastic Beanstalk and store the blog data S3. THe engine uses the blackfriday markdown library, gorilla mux, and the built in Go templating functionality. Development of goblog has been primarily an exercise to learn and experiment with Go and AWS to build my personal blog. [Here](http://www.peternoyes.com) is the blog in action.
 
 ## Getting Started
 The configuration is set via environment variables. The blog data can either be stored in a local folder or in Amazon S3.
@@ -19,3 +19,7 @@ Markdown files need to contain a set of key/value pairs in the top part of the f
 Finally, markdown files need to follow a precise naming convention:
 
 YYYY-MM-DD-HH-mm-ss-Title.md
+
+## Resources
+
+Layout based on: http://tutorialzine.com/2013/03/simple-php-blogging-system-part-2/

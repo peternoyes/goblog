@@ -16,6 +16,7 @@ type Driver interface {
 	GlobMarkdown() (Stubs, error)
 	Open(string) (io.ReadCloser, error)
 	GetImage(image string) ([]byte, error)
+	GetTemplateFolder() (string, error)
 }
 
 type DriverFile struct {
@@ -32,6 +33,10 @@ func (d *DriverFile) GetConfig() ([]byte, error) {
 
 func (d *DriverFile) GetImage(image string) ([]byte, error) {
 	return ioutil.ReadFile(d.Root + image)
+}
+
+func (d *DriverFile) GetTemplateFolder() (string, error) {
+	return config.Theme, nil
 }
 
 func (d *DriverFile) GlobMarkdown() (Stubs, error) {

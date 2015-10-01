@@ -14,6 +14,7 @@ type Config struct {
 	Copyright    string   `json:"copyright"`
 	ExcerptTag   string   `json:"excerptTag"`
 	Links        []Link   `json:"links"`
+	Theme        string   `json:"theme"`
 }
 
 type Link struct {

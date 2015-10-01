@@ -4,11 +4,25 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
 
-var templates = template.Must(template.ParseGlob("template/*"))
+var templates *template.Template
+
+func InitTemplates() {
+	var folder = "template/"
+	if config.Theme != "" {
+		var err error
+		folder, err = driver.GetTemplateFolder()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+	}
+
+	templates = template.Must(template.ParseGlob(folder + "*"))
+}
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	// BUG: Handle .favicon

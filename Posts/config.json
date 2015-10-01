@@ -13,5 +13,6 @@
             "text": "Google",
             "url": "http://www.google.com/"
         }
-    ]
+    ],
+    "theme": "template/"
 }

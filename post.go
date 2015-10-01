@@ -70,7 +70,13 @@ func SyncPosts() {
 		post := GetStub(fragment)
 		if post != nil {
 			if p.LastModified != post.LastModified {
-				fmt.Println("Post Updated")
+				fileStream, err := driver.Open(p.Path)
+				if err != nil {
+					log.Fatal(err)
+					continue
+				}
+				defer fileStream.Close()
+				post.Post = loadPost(fileStream)
 			}
 		} else {
 			fileStream, err := driver.Open(p.Path)
